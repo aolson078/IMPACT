@@ -6,7 +6,6 @@ describe("ImpactVerifier", function () {
   let deployer: any;
   let alice: any;
   let bob: any;
-  let charlie: any;
   let grace: any;
   let igor: any;
 
