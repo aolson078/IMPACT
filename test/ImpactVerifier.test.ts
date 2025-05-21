@@ -7,9 +7,7 @@ describe("ImpactVerifier", function () {
   let alice: any;
   let bob: any;
   let charlie: any;
-  let frank: any;
   let grace: any;
-  let hector: any;
   let igor: any;
 
   beforeEach(async () => {
