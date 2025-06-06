@@ -96,7 +96,7 @@ contract ImpactToken is ERC20, Ownable, Pausable {
     }
 
     /**
-     * @notice Check if an address is blacklisted.
+     * @notice Check if address is blacklisted.
      * @param _addr Address to check.
      * @return True if blacklisted, false otherwise.
      */
