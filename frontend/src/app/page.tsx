@@ -18,8 +18,8 @@ export default function Home() {
         IMPACT Dashboard - Image Verification
       </h1>
       <p className="max-w-xl text-primary-200/90">
-        IMPACT is a novel ReFi (Regenerative Finance) project built on Polygon.
-        The platform aims to incentivize ecologicaly beneficial behavior by
+        IMPACT is a ReFi (Regenerative Finance) project built on Polygon. The
+        platform aims to incentivize ecologicaly beneficial behavior by
         rewarding users for planting trees and other ecological activities.
       </p>
       <div className="flex gap-4">
