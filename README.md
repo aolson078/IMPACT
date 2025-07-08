@@ -3,6 +3,7 @@
 ## Overview
 
 IMPACT is a ReFi (Regenerative Finance) project built on Ethereum. It features an ERC20 token ("IMPACT"), staking, and a verification system for impact claims.
+The IMPACT token will be rewarded to users after a succesful action validation.
 
 ## Contracts
 
