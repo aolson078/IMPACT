@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional wisp effect */
+.wisp::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(ellipse at top, rgba(139,92,246,0.15), transparent),
+              radial-gradient(ellipse at bottom, rgba(139,92,246,0.25), transparent);
+  filter: blur(80px);
+  pointer-events: none;
+  animation: float 16s ease-in-out infinite;
+}
