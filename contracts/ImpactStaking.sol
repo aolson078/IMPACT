@@ -1,0 +1,1 @@
+// Manages IMPACT staking, interacts with carbon credit systems
