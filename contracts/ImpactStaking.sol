@@ -47,7 +47,7 @@ contract ImpactStaking {
         impactToken.transferFrom(msg.sender, address(this), amount);
 
         // TODO: Add mapping of tokenId to amount staked
-        tokenIdToAmountStaked[address(impactToken)][msg.sender] = amount;
+        amountStaked[msg.sender] = amount;
         originalOwner[address(impactToken)][msg.sender] = msg.sender;
         stakeStart[address(impactToken)][msg.sender] = block.timestamp;
         lastClaimed[address(impactToken)][msg.sender] = block.timestamp;
