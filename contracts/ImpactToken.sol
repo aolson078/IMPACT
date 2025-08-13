@@ -5,11 +5,11 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * @title Impact
+ * @title ImpactToken
  * @notice ERC20 token for ReFi project
  * @dev Extends OpenZeppelin ERC20 and Ownable.
  */
-contract Impact is ERC20, Ownable {
+contract ImpactToken is ERC20, Ownable {
     error BlackListed(address addr);
 
     error InsufficientTokens(address from, uint256 balanceAvailable);
