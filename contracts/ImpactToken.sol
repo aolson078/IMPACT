@@ -1,24 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title Impact
  * @notice ERC20 token for ReFi project
  * @dev Extends OpenZeppelin ERC20 and Ownable.
  */
-contract M1 is ERC20, Ownable {
+contract Impact is ERC20, Ownable {
     error BlackListed(address addr);
-
-    error OverMaxSupply(address receiver, uint256 amountAttempted);
 
     error InsufficientTokens(address from, uint256 balanceAvailable);
 
     error IncorrectAmountToSend(uint256 sent, uint256 expected);
-
-    error LessThan1000Tokens(uint256 attemptedAmount);
 
     error NotEnoughTokens(uint256 balanceAvailable, uint256 requiredAmount);
 
@@ -28,8 +24,14 @@ contract M1 is ERC20, Ownable {
 
     error FailedTransaction();
 
-    /// @notice Maximum total supply (1,000,000 tokens, 18 decimals)
+    // --------------------------- What are the pros and cons of a max supply?
     //uint256 public constant MAX_SUPPLY = 1_000_000 * 10 ** 18;
+
+    // Base rate for rewards per verification
+    uint256 public constant REWARD_RATE = 1;
+
+    // Address for wallet containing funds for the DAO
+    uint256 public constant TREASURY_ADDRESS = 0x00000000000000000000;
 
     /// @notice Tracks blacklisted addresses that cannot send/receive tokens.
     mapping(address => bool) public blacklist;
@@ -82,16 +84,5 @@ contract M1 is ERC20, Ownable {
      */
     function isBlacklisted(address _addr) public view returns (bool) {
         return blacklist[_addr];
-    }
-
-    /**
-     * @notice Check if totalSupply is less than or equal to MAX_SUPPLY, and if so, mint amount of tokens to address.
-     * @param to Address to mint tokens to.
-     * @param amount Amount to mint (in base token units, 18 decimals).
-     */
-    function _safeMint(address to, uint256 amount) internal {
-        // if (totalSupply() + amount > MAX_SUPPLY)
-        //     revert OverMaxSupply(to, amount);
-        _mint(to, amount);
     }
 }
