@@ -22,6 +22,8 @@ contract OffsetMock is Ownable {
         tco2Token = TCO2Mock(_tco2Token);
     }
 
+    // @notice Auto offset exact in token
+    // @param amount The amount of input token to offset
     function autoOffsetExactInToken(uint256 amount) external {
         require(
             inputToken.transferFrom(msg.sender, address(this), amount),
