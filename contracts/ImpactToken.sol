@@ -3,13 +3,14 @@ pragma solidity ^0.8.23;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title ImpactToken
  * @notice ERC20 token for ReFi project
  * @dev Extends OpenZeppelin ERC20 and Ownable.
  */
-contract ImpactToken is ERC20, Ownable {
+contract ImpactToken is ERC20, Ownable, Pausable {
     error BlackListed(address addr);
 
     error InsufficientTokens(address from, uint256 balanceAvailable);
@@ -28,13 +29,19 @@ contract ImpactToken is ERC20, Ownable {
     //uint256 public constant MAX_SUPPLY = 1_000_000 * 10 ** 18;
 
     // Base rate for rewards per verification
-    uint256 public constant REWARD_RATE = 1;
+    uint256 public rewardRate = 1;
 
     // Address for wallet containing funds for the DAO
     uint256 public constant TREASURY_ADDRESS = 0x00000000000000000000;
 
+    /// @notice Address allowed to mint/burn via oracle-only functions
+    address public oracle;
+
     /// @notice Tracks blacklisted addresses that cannot send/receive tokens.
     mapping(address => bool) public blacklist;
+
+    /// @dev Mapping of user address to last claim time
+    mapping(address => uint256) public lastClaimTime;
 
     /**
      * @notice Modifier to require that an address is not blacklisted.
@@ -42,6 +49,11 @@ contract ImpactToken is ERC20, Ownable {
      */
     modifier notOnBlackList(address _addr) {
         if (blacklist[_addr]) revert BlackListed(_addr);
+        _;
+    }
+
+    modifier onlyOracle() {
+        require(msg.sender == oracle, "Not authorized: only oracle");
         _;
     }
 
@@ -53,6 +65,12 @@ contract ImpactToken is ERC20, Ownable {
         uint256 initialSupply
     ) ERC20("IMPACT", "IMP") Ownable(msg.sender) {
         _mint(msg.sender, initialSupply);
+    }
+
+    // Is there a reason to set the oracle again?
+    /// @notice Owner can set the oracle address
+    function setOracle(address _oracle) public onlyOwner {
+        oracle = _oracle;
     }
 
     /**
@@ -84,5 +102,29 @@ contract ImpactToken is ERC20, Ownable {
      */
     function isBlacklisted(address _addr) public view returns (bool) {
         return blacklist[_addr];
+    }
+
+    function mintTokens(address to, uint256 amount) public onlyOracle {
+        _mint(to, amount);
+    }
+
+    function burnTokens(uint256 amount) public onlyOracle {
+        _burn(msg.sender, amount);
+    }
+
+    function burnFrom(address from, uint256 amount) public onlyOracle {
+        _burn(from, amount);
+    }
+
+    function setRewardRate(uint256 _rewardRate) public onlyOwner {
+        rewardRate = _rewardRate;
+    }
+
+    function pauseTransfer() public onlyOwner {
+        _pause();
+    }
+
+    function unpauseTransfer() public onlyOwner {
+        _unpause();
     }
 }
