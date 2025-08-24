@@ -1,10 +1,11 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Providers from "./providers";
 
 export const metadata = {
   title: "IMPACT Dashboard",
-  description: "Dark, whimsical, and ready for dApp life.",
+  description: "",
 };
 
 export default function RootLayout({
@@ -16,7 +17,9 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className="bg-blackish-300 text-white relative overflow-x-hidden selection:bg-primary-600 selection:text-blackish-300">
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <Providers>
+          <main className="min-h-screen">{children}</main>
+        </Providers>
         <Footer />
         <div className="fixed inset-0 z-[-1] wisp" />
       </body>

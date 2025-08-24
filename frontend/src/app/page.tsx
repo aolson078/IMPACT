@@ -1,3 +1,16 @@
+"use client";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+
+import deployedAddresses from "../../deployed-addresses.json";
+
+const addresses = deployedAddresses["polygon"];
+
+const TOKEN_CONTRACT_ADDRESS = addresses.token as `0x${string}`;
+const VERIFIER_CONTRACT_ADDRESS = addresses.verifier as `0x${string}`;
+const STAKING_CONTRACT_ADDRESS = addresses.staking as `0x${string}`;
+const CARBON_CREDIT_CONTRACT_ADDRESS = addresses.carbonCredit as `0x${string}`;
+
 export default function Home() {
   return (
     <section className="flex flex-col items-center justify-center text-center gap-8 py-32">
@@ -5,16 +18,12 @@ export default function Home() {
         IMPACT Dashboard
       </h1>
       <p className="max-w-xl text-primary-200/90">
-        Kick‑start your regenerative finance front‑end with a sleek, dark,
-        black‑and‑purple interface – infused with a touch of cosmic whimsy.
+        IMPACT is a ReFi (Regenerative Finance) project built on Polygon. The
+        platform aims to incentivize ecologicaly beneficial behavior by
+        rewarding users for planting trees and other ecological activities.
       </p>
       <div className="flex gap-4">
-        <button className="px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 ring-2 ring-primary-700/50 transition">
-          Get Started
-        </button>
-        <button className="px-6 py-3 rounded-xl ring-1 ring-primary-600 hover:bg-primary-600/10 transition">
-          Documentation
-        </button>
+        <ConnectButton chainStatus="full" showBalance={false} />
       </div>
     </section>
   );
