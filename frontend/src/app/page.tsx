@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <section className="flex flex-col items-center justify-center text-center gap-8 py-32">
       <h1 className="text-5xl md:text-7xl font-extrabold bg-gradient-to-br from-primary-500 to-primary-700 bg-clip-text text-transparent">
-        IMPACT Dashboard
+        IMPACT Dashboard - Image Verification
       </h1>
       <p className="max-w-xl text-primary-200/90">
         IMPACT is a ReFi (Regenerative Finance) project built on Polygon. The
