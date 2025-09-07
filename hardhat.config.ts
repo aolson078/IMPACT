@@ -11,10 +11,13 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      forking: {
-        url: "https://polygon-rpc.com", // or use Alchemy/Ankr/etc
-        blockNumber: 48480000,
-      },
+      forking:
+        process.env.FORK === "1"
+          ? {
+              url: process.env.FORK_URL || "https://polygon-rpc.com",
+              blockNumber: 48480000,
+            }
+          : undefined,
     },
     polygon: {
       url: "https://polygon-rpc.com",
