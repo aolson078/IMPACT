@@ -8,6 +8,7 @@ describe("ImpactVerifier", function () {
   let bob: any;
   let charlie: any;
   let dave: any;
+  let eve: any;
 
   beforeEach(async () => {
     [deployer, alice, bob] = await ethers.getSigners();
