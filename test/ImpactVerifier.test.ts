@@ -7,7 +7,6 @@ describe("ImpactVerifier", function () {
   let alice: any;
   let bob: any;
   let charlie: any;
-  let eve: any;
   let frank: any;
   let grace: any;
   let hector: any;
