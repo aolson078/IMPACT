@@ -9,8 +9,7 @@ export default function StakePage() {
   const [isStaking, setIsStaking] = useState(false);
   const [stakeSuccess, setStakeSuccess] = useState(false);
 
-  // start balance
-  const userBalance = 2000;
+  const userBalance = 20000;
   const stakedAmount = 250;
   const apy = 12.5;
   const totalStaked = 50000;
