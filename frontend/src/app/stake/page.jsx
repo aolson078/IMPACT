@@ -9,7 +9,7 @@ export default function StakePage() {
   const [isStaking, setIsStaking] = useState(false);
   const [stakeSuccess, setStakeSuccess] = useState(false);
 
-  // starting demo balance for testing
+  // starting demo balance for test
   const userBalance = 2000;
   const stakedAmount = 250;
   const apy = 12.5;
