@@ -61,5 +61,6 @@ jobs:
         with:
           app-name: 'Impact'
           slot-name: 'Production'
-          package: .
+          package: ./frontend
+
           
