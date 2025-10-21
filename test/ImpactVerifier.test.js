@@ -1,12 +1,11 @@
-import { ethers } from "hardhat";
-import { expect } from "chai";
+const { ethers } = require("hardhat");
+const { expect } = require("chai");
 
 describe("ImpactVerifier", function () {
-  let verifierContract: any;
-  let deployer: any;
-  let alice: any;
-  let bob: any;
-  let grace: any;
+  let verifierContract;
+  let deployer;
+  let alice;
+  let bob;
 
   beforeEach(async () => {
     [deployer, alice, bob] = await ethers.getSigners();

@@ -1,13 +1,13 @@
-import { ethers } from "hardhat";
-import { expect } from "chai";
+const { ethers } = require("hardhat");
+const { expect } = require("chai");
 
 describe.skip("ImpactToken", function () {
-  let impactToken: any;
-  let deployer: string;
-  let firstOwner: string;
-  let secondOwner: string;
-  let external: string;
-  let unprivileged: string;
+  let impactToken;
+  let deployer;
+  let firstOwner;
+  let secondOwner;
+  let external;
+  let unprivileged;
 
   beforeEach(async () => {
     const accounts = await ethers.getSigners();
@@ -19,7 +19,7 @@ describe.skip("ImpactToken", function () {
 
     const ImpactTokenFactory = await ethers.getContractFactory("ImpactToken");
     impactToken = await ImpactTokenFactory.deploy();
-    await impactToken.deployed();
+    await impactToken.deployed?.();
   });
 
   it("should revert if unauthorized call is made", async () => {
@@ -28,22 +28,21 @@ describe.skip("ImpactToken", function () {
     await expect(
       impactToken
         .connect(externalSigner)
-        .publicOrExternalContractMethod("arg1", "arg2") // Replace with real args
-    ).to.be.revertedWith("Reason ..."); // Replace with the actual revert reason if known
+        .publicOrExternalContractMethod("arg1", "arg2")
+    ).to.be.revertedWith("Reason ...");
   });
 
   describe("Security Tests", function () {
-    let newImpactToken: any;
+    let newImpactToken;
 
     beforeEach(async () => {
       const ImpactTokenFactory = await ethers.getContractFactory("ImpactToken");
       newImpactToken = await ImpactTokenFactory.deploy();
-      await newImpactToken.deployed();
+      await newImpactToken.deployed?.();
     });
 
     it("should fail to initialize again", async () => {
-      // Assumes the contract uses OpenZeppelin's Initializable pattern
-      await expect(newImpactToken.initialize()).to.be.reverted; // or `.to.be.revertedWith(...)`
+      await expect(newImpactToken.initialize()).to.be.reverted;
     });
 
     it("should return true for thisMethodShouldReturnTrue", async () => {

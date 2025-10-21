@@ -11,7 +11,7 @@ async function main() {
   const ethSigner = provider.getSigner(signer.address);
   const toucan = new ToucanClient("polygon", provider, ethSigner);
 
-  const tco2Address = "0x..."; // real TCO2 address
+  const tco2Address = "0x..."; 
   const tco2 = await toucan.getTCO2Contract(tco2Address);
   const balance = await tco2.balanceOf(signer.address);
 

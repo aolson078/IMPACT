@@ -8,11 +8,7 @@ export const metadata = {
   description: "",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <body className="bg-blackish-300 text-white relative overflow-x-hidden selection:bg-primary-600 selection:text-blackish-300">
@@ -26,3 +22,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+

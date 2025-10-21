@@ -32,6 +32,7 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
+    "build": "react-scripts build",
     "start": "node server.js"
   }
 }

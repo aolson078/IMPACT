@@ -8,16 +8,18 @@ export default function Navbar() {
         IMPACT
       </Link>
       <nav className="space-x-4 text-sm">
-        <Link className="hover:text-primary-300 transition" href="#features">
-          Features
+        <Link className="hover:text-primary-300 transition" href="/verify">
+          Verify
         </Link>
-        <Link className="hover:text-primary-300 transition" href="#docs">
-          Docs
+        <Link className="hover:text-primary-300 transition" href="/stake">
+          Stake
         </Link>
-        <Link className="hover:text-primary-300 transition" href="#github">
-          GitHub
+        <Link className="hover:text-primary-300 transition" href="/stats">
+          Stats
         </Link>
       </nav>
     </header>
   );
 }
+
+
