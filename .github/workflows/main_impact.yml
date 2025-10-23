@@ -38,6 +38,9 @@ jobs:
 
       - name: Prepare standalone deployment
         run: |
+          # Create deploy directory
+          mkdir -p ./deploy
+
           # Copy standalone server contents (not the folder)
           cp -r .next/standalone/* ./deploy/
           cp -r .next/static ./deploy/.next/static
