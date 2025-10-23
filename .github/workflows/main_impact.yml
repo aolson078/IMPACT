@@ -38,10 +38,28 @@ jobs:
 
       - name: Prepare standalone deployment
         run: |
+          # Copy standalone server
           cp -r .next/standalone ./deploy
           cp -r .next/static ./deploy/.next/static
           cp -r public ./deploy/public
-          echo '{"name":"impact-frontend","version":"1.0.0","scripts":{"start":"node server.js"},"engines":{"node":"22.x"}}' > ./deploy/package.json
+
+          # Copy missing files needed by API routes
+          cp deployed-addresses.json ./deploy/
+          cp -r node_modules/ethers ./deploy/node_modules/
+
+          # Create package.json for Azure
+          cat > ./deploy/package.json << 'EOF'
+          {
+            "name": "impact-frontend",
+            "version": "1.0.0",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "engines": {
+              "node": "22.x"
+            }
+          }
+          EOF
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -76,3 +94,13 @@ jobs:
           app-name: "Impact"
           slot-name: "Production"
           package: .
+
+      - name: Verify deployment
+        run: |
+          sleep 30
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://impact-czexgybtg4dea0bp.centralus-01.azurewebsites.net)
+          if [ "$response" != "200" ]; then
+            echo "Health check failed with status $response"
+            exit 1
+          fi
+          echo "Deployment verified - site is up!"
