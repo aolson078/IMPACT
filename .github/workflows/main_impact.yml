@@ -90,21 +90,28 @@ jobs:
           echo "Waiting for app to start..."
           sleep 30
 
-          # Try multiple times
+          # Try multiple times with more debugging
           for i in {1..3}; do
             echo "Attempt $i/3: Testing site..."
             response=$(curl -s -o /dev/null -w "%{http_code}" https://impact-czexgybtg4dea0bp.centralus-01.azurewebsites.net)
             echo "Response status: $response"
             
+            # Get response body for debugging
+            if [ "$response" != "200" ]; then
+              echo "Getting response body for debugging..."
+              curl -s https://impact-czexgybtg4dea0bp.centralus-01.azurewebsites.net | head -20
+            fi
+            
             if [ "$response" = "200" ]; then
-              echo "Deployment verified - site is up!"
+              echo "✅ Deployment verified - site is up!"
               exit 0
             fi
             
             sleep 20
           done
 
-          echo "Health check failed - site not responding after 3 attempts"
+          echo "❌ Health check failed - site not responding after 3 attempts"
           echo "Last response: $response"
           echo "Check Azure logs: https://impact-czexgybtg4dea0bp.scm.centralus-01.azurewebsites.net"
+          echo "Check application logs: https://impact-czexgybtg4dea0bp.scm.centralus-01.azurewebsites.net/api/logs/docker"
           exit 1
