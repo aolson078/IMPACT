@@ -38,13 +38,10 @@ jobs:
 
       - name: Prepare standalone deployment
         run: |
-          # Copy standalone server
+          # Copy standalone server (includes all needed dependencies)
           cp -r .next/standalone ./deploy
           cp -r .next/static ./deploy/.next/static
           cp -r public ./deploy/public
-
-          # Copy all dependencies (standalone mode needs this)
-          cp -r node_modules ./deploy/
 
           # Copy missing files needed by API routes
           cp deployed-addresses.json ./deploy/
@@ -100,23 +97,23 @@ jobs:
       - name: Verify deployment
         run: |
           echo "Waiting for app to start..."
-          sleep 60
+          sleep 30
 
-          # Try multiple times with different endpoints
-          for i in {1..5}; do
-            echo "Attempt $i/5: Testing site..."
+          # Try multiple times
+          for i in {1..3}; do
+            echo "Attempt $i/3: Testing site..."
             response=$(curl -s -o /dev/null -w "%{http_code}" https://impact-czexgybtg4dea0bp.centralus-01.azurewebsites.net)
             echo "Response status: $response"
             
             if [ "$response" = "200" ]; then
-              echo "✅ Deployment verified - site is up!"
+              echo "Deployment verified - site is up!"
               exit 0
             fi
             
-            sleep 30
+            sleep 20
           done
 
-          echo "❌ Health check failed - site not responding after 5 attempts"
+          echo "Health check failed - site not responding after 3 attempts"
           echo "Last response: $response"
           echo "Check Azure logs: https://impact-czexgybtg4dea0bp.scm.centralus-01.azurewebsites.net"
           exit 1
