@@ -38,8 +38,8 @@ jobs:
 
       - name: Prepare standalone deployment
         run: |
-          # Copy standalone server (includes all needed dependencies)
-          cp -r .next/standalone ./deploy
+          # Copy standalone server contents (not the folder)
+          cp -r .next/standalone/* ./deploy/
           cp -r .next/static ./deploy/.next/static
           cp -r public ./deploy/public
 
