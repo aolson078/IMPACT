@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: frontend/build # 👈 This is what Azure will serve
+          path: frontend/out
 
   deploy:
     runs-on: ubuntu-latest
