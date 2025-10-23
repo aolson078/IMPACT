@@ -36,37 +36,20 @@ jobs:
         env:
           SKIP_ENV_VALIDATION: true
 
-      - name: Prepare standalone deployment
+      - name: Prepare deployment
         run: |
           # Create deploy directory
           mkdir -p ./deploy
 
-          # Copy standalone server contents (not the folder)
-          cp -r .next/standalone/* ./deploy/
-
-          # Create .next directory and copy static files
-          mkdir -p ./deploy/.next
-          cp -r .next/static ./deploy/.next/static
-
-          # Copy public files
+          # Copy built Next.js app
+          cp -r .next ./deploy/
           cp -r public ./deploy/public
+          cp -r node_modules ./deploy/
+          cp package.json ./deploy/
+          cp package-lock.json ./deploy/
 
           # Copy missing files needed by API routes
           cp deployed-addresses.json ./deploy/
-
-          # Create package.json for Azure
-          cat > ./deploy/package.json << 'EOF'
-          {
-            "name": "impact-frontend",
-            "version": "1.0.0",
-            "scripts": {
-              "start": "node server.js"
-            },
-            "engines": {
-              "node": "22.x"
-            }
-          }
-          EOF
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

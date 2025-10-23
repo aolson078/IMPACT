@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone", // Optimized server bundle for Azure
+  // Use default mode for Azure Web Apps
 };
 
 export default nextConfig;
