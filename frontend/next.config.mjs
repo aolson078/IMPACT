@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export", // Static HTML export for Azure
+  output: "standalone", // Optimized server bundle for Azure
 };
 
 export default nextConfig;

@@ -17,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: frontend # 👈 All npm commands will run inside /frontend
+        working-directory: frontend
 
     steps:
       - uses: actions/checkout@v4
@@ -33,12 +33,20 @@ jobs:
         run: |
           npm ci
           npm run build
+        env:
+          SKIP_ENV_VALIDATION: true
+
+      - name: Prepare standalone deployment
+        run: |
+          cp -r .next/standalone ./deploy
+          cp -r .next/static ./deploy/.next/static
+          cp -r public ./deploy/public
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: frontend/out
+          path: frontend/deploy
 
   deploy:
     runs-on: ubuntu-latest
@@ -66,4 +74,5 @@ jobs:
         with:
           app-name: "Impact"
           slot-name: "Production"
-          package: ./build
+          package: .
+          startup-command: "node server.js"
