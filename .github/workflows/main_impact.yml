@@ -36,26 +36,11 @@ jobs:
         env:
           SKIP_ENV_VALIDATION: true
 
-      - name: Prepare deployment
-        run: |
-          # Create deploy directory
-          mkdir -p ./deploy
-
-          # Copy built Next.js app
-          cp -r .next ./deploy/
-          cp -r public ./deploy/public
-          cp -r node_modules ./deploy/
-          cp package.json ./deploy/
-          cp package-lock.json ./deploy/
-
-          # Copy missing files needed by API routes
-          cp deployed-addresses.json ./deploy/
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: frontend/deploy
+          path: frontend
 
   deploy:
     runs-on: ubuntu-latest
@@ -84,6 +69,7 @@ jobs:
           app-name: "Impact"
           slot-name: "Production"
           package: .
+          startup-command: "npm start"
 
       - name: Verify deployment
         run: |
