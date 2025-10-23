@@ -43,7 +43,12 @@ jobs:
 
           # Copy standalone server contents (not the folder)
           cp -r .next/standalone/* ./deploy/
+
+          # Create .next directory and copy static files
+          mkdir -p ./deploy/.next
           cp -r .next/static ./deploy/.next/static
+
+          # Copy public files
           cp -r public ./deploy/public
 
           # Copy missing files needed by API routes
