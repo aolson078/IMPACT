@@ -71,6 +71,7 @@ jobs:
           app-name: "Impact"
           slot-name: "Production"
           package: .
+          startup-command: "node server.js"
 
       - name: Verify deployment
         run: |
