@@ -1,6 +1,4 @@
 "use client";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import "@rainbow-me/rainbowkit/styles.css";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -21,70 +19,117 @@ export default function VerifyPage() {
     if (!selectedImage) return;
     
     setIsVerifying(true);
+    
     // Simulate verification process
     setTimeout(() => {
-        // need to create a function to verify the image
-        const verified = verifyImage(selectedImage);
+      const verified = Math.random() > 0.3; // 70% success rate for demo
       setVerificationResult({
-        verified: verified.verified,
-        confidence: verified.confidence,
-        description: verified.description
+        verified: verified,
+        confidence: Math.floor(Math.random() * 30) + 70, // 70-100% confidence
+        description: verified 
+          ? "Image shows clear evidence of ecological activity" 
+          : "Unable to verify ecological impact from this image"
       });
       setIsVerifying(false);
     }, 2000);
   };
 
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
+    <div style={{ 
+      minHeight: '100vh', 
+      padding: '3rem 1rem',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      color: 'white',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <Link 
             href="/" 
-            className="inline-block mb-4 text-primary-400 hover:text-primary-300 transition"
+            style={{
+              display: 'inline-block',
+              marginBottom: '1rem',
+              color: '#a0a0a0',
+              textDecoration: 'none'
+            }}
           >
             ← Back to Home
           </Link>
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-br from-primary-500 to-primary-700 bg-clip-text text-transparent mb-4">
+          <h1 style={{ 
+            fontSize: '3rem', 
+            fontWeight: 'bold', 
+            marginBottom: '1rem',
+            background: 'linear-gradient(45deg, #9C27B0, #673AB7)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
             Verify Impact
           </h1>
-          <p className="text-primary-200/90 text-lg max-w-2xl mx-auto">
+          <p style={{ fontSize: '1.2rem', opacity: 0.9, maxWidth: '600px', margin: '0 auto' }}>
             Upload images of your ecological activities to verify and earn IMPACT tokens
           </p>
         </div>
 
-        <div className="bg-blackish-400/50 backdrop-blur-sm rounded-xl p-8 border border-primary-800/30">
-          <div className="space-y-8">
+        <div style={{
+          backgroundColor: 'rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          padding: '2rem',
+          border: '1px solid rgba(156, 39, 176, 0.3)'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* Image Upload */}
-            <div className="space-y-4">
-              <label className="block text-lg font-semibold text-white">
+            <div>
+              <label style={{ 
+                display: 'block', 
+                fontSize: '1.2rem', 
+                fontWeight: 'bold', 
+                marginBottom: '1rem' 
+              }}>
                 Upload Image
               </label>
-              <div className="border-2 border-dashed border-primary-600/50 rounded-lg p-8 text-center hover:border-primary-500/70 transition-colors">
+              <div style={{
+                border: '2px dashed rgba(255,255,255,0.3)',
+                borderRadius: '8px',
+                padding: '2rem',
+                textAlign: 'center',
+                cursor: 'pointer',
+                transition: 'border-color 0.3s'
+              }}>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="hidden"
+                  style={{ display: 'none' }}
                   id="image-upload"
                 />
                 <label
                   htmlFor="image-upload"
-                  className="cursor-pointer block"
+                  style={{ cursor: 'pointer', display: 'block' }}
                 >
                   {selectedImage ? (
-                    <div className="space-y-2">
+                    <div>
                       <img
                         src={URL.createObjectURL(selectedImage)}
                         alt="Selected"
-                        className="max-h-64 mx-auto rounded-lg"
+                        style={{
+                          maxHeight: '300px',
+                          margin: '0 auto',
+                          borderRadius: '8px',
+                          marginBottom: '1rem'
+                        }}
                       />
-                      <p className="text-primary-300">{selectedImage.name}</p>
+                      <p style={{ color: '#a0a0a0', margin: 0 }}>{selectedImage.name}</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      <div className="text-6xl text-primary-500">📸</div>
-                      <p className="text-primary-300">Click to upload or drag and drop</p>
-                      <p className="text-sm text-primary-400/70">PNG, JPG up to 10MB</p>
+                    <div>
+                      <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📸</div>
+                      <p style={{ color: '#a0a0a0', marginBottom: '0.5rem' }}>
+                        Click to upload or drag and drop
+                      </p>
+                      <p style={{ fontSize: '0.9rem', color: '#a0a0a0', opacity: 0.7, margin: 0 }}>
+                        PNG, JPG up to 10MB
+                      </p>
                     </div>
                   )}
                 </label>
@@ -92,11 +137,25 @@ export default function VerifyPage() {
             </div>
 
             {/* Verification Button */}
-            <div className="flex justify-center">
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
               <button
                 onClick={handleVerify}
                 disabled={!selectedImage || isVerifying}
-                className="px-8 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
+                style={{
+                  padding: '1rem 2rem',
+                  background: isVerifying 
+                    ? 'linear-gradient(45deg, #666, #777)' 
+                    : 'linear-gradient(45deg, #9C27B0, #673AB7)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '1.1rem',
+                  fontWeight: 'bold',
+                  cursor: isVerifying ? 'not-allowed' : 'pointer',
+                  opacity: isVerifying ? 0.7 : 1,
+                  transform: isVerifying ? 'none' : 'scale(1.05)',
+                  transition: 'all 0.2s'
+                }}
               >
                 {isVerifying ? "Verifying..." : "Verify Image"}
               </button>
@@ -104,28 +163,60 @@ export default function VerifyPage() {
 
             {/* Verification Result */}
             {verificationResult && (
-              <div className={`p-6 rounded-lg border-2 ${
-                verificationResult.verified 
-                  ? "bg-green-900/20 border-green-500/50" 
-                  : "bg-red-900/20 border-red-500/50"
-              }`}>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-2xl">
+              <div style={{
+                padding: '1.5rem',
+                borderRadius: '8px',
+                border: '2px solid',
+                backgroundColor: verificationResult.verified 
+                  ? 'rgba(76, 175, 80, 0.2)' 
+                  : 'rgba(244, 67, 54, 0.2)',
+                borderColor: verificationResult.verified 
+                  ? 'rgba(76, 175, 80, 0.5)' 
+                  : 'rgba(244, 67, 54, 0.5)'
+              }}>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '1rem', 
+                  marginBottom: '1rem' 
+                }}>
+                  <span style={{ fontSize: '1.5rem' }}>
                     {verificationResult.verified ? "✅" : "❌"}
                   </span>
-                  <h3 className="text-xl font-semibold">
+                  <h3 style={{ 
+                    fontSize: '1.3rem', 
+                    fontWeight: 'bold',
+                    margin: 0
+                  }}>
                     {verificationResult.verified ? "Verification Successful" : "Verification Failed"}
                   </h3>
                 </div>
-                <p className="text-primary-200/90">
+                <p style={{ 
+                  color: '#a0a0a0', 
+                  marginBottom: '0.5rem',
+                  margin: 0
+                }}>
                   Confidence: {verificationResult.confidence}%
                 </p>
-                <p className="text-primary-200/90">
+                <p style={{ 
+                  color: '#a0a0a0',
+                  margin: 0
+                }}>
                   {verificationResult.description}
                 </p>
                 {verificationResult.verified && (
-                  <div className="mt-4 p-3 bg-green-800/20 rounded border border-green-500/30">
-                    <p className="text-green-300 font-medium">
+                  <div style={{
+                    marginTop: '1rem',
+                    padding: '1rem',
+                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(76, 175, 80, 0.3)'
+                  }}>
+                    <p style={{ 
+                      color: '#4CAF50', 
+                      fontWeight: 'bold', 
+                      margin: 0 
+                    }}>
                       🎉 You earned 100 IMPACT tokens!
                     </p>
                   </div>
@@ -134,9 +225,26 @@ export default function VerifyPage() {
             )}
 
             {/* Connect Wallet */}
-            <div className="text-center pt-6 border-t border-primary-800/30">
-              <p className="text-primary-300 mb-4">Connect your wallet to claim tokens</p>
-              <ConnectButton chainStatus="full" showBalance={false} />
+            <div style={{ 
+              textAlign: 'center', 
+              paddingTop: '1.5rem', 
+              borderTop: '1px solid rgba(255,255,255,0.2)' 
+            }}>
+              <p style={{ color: '#a0a0a0', marginBottom: '1rem' }}>
+                Connect your wallet to claim tokens
+              </p>
+              <button style={{
+                padding: '0.75rem 2rem',
+                backgroundColor: '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}>
+                Connect Wallet
+              </button>
             </div>
           </div>
         </div>

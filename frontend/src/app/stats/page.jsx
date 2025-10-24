@@ -1,97 +1,24 @@
 "use client";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import "@rainbow-me/rainbowkit/styles.css";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { usePublicClient } from "wagmi";
-
-import deployedAddresses from "../../../deployed-addresses.json";
-
-const addresses = deployedAddresses["polygon"];
-
-const TOKEN_CONTRACT_ADDRESS = addresses.token;
-const VERIFIER_CONTRACT_ADDRESS = addresses.verifier;
-const STAKING_CONTRACT_ADDRESS = addresses.staking;
-const CARBON_CREDIT_CONTRACT_ADDRESS = addresses.carbonCredit;
 
 export default function StatsPage() {
-  const client = usePublicClient();
   const [bctUsd, setBctUsd] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const PAIR_ADDRESS = "0x1e67124681b402064cd0abe8ed1b5c79d2e02f64"; // BCT/USDC
-  const CHAINLINK_USDC_USD = "0xfE4A8cc5b5b2366C1B58Bea3858e81843581b2F7"; // USDC/USD
-  const TOKEN_BCT = "0x2F800Db0fdb5223b3C3f354886d907A671414A7F";
-  const TOKEN_USDC = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174";
-
-  const pairAbi = useMemo(
-    () => [
-      { type: "function", name: "getReserves", stateMutability: "view", inputs: [], outputs: [
-        { name: "reserve0", type: "uint112" }, { name: "reserve1", type: "uint112" }, { name: "blockTimestampLast", type: "uint32" }
-      ] },
-      { type: "function", name: "token0", stateMutability: "view", inputs: [], outputs: [{ name: "", type: "address" }] },
-      { type: "function", name: "token1", stateMutability: "view", inputs: [], outputs: [{ name: "", type: "address" }] },
-    ],
-    []
-  );
-
-  const feedAbi = useMemo(
-    () => [
-      { type: "function", name: "latestRoundData", stateMutability: "view", inputs: [], outputs: [
-        { name: "roundId", type: "uint80" },
-        { name: "answer", type: "int256" },
-        { name: "startedAt", type: "uint256" },
-        { name: "updatedAt", type: "uint256" },
-        { name: "answeredInRound", type: "uint80" },
-      ] },
-      { type: "function", name: "decimals", stateMutability: "view", inputs: [], outputs: [{ name: "", type: "uint8" }] },
-    ],
-    []
-  );
-
-  async function fetchPrice() {
-    if (!client) return;
+  const handleRefreshPrice = () => {
     setLoading(true);
     setError(null);
-    try {
-      // Prefer calling our deployed oracle via API route
-      const res = await fetch("/api/bct-usd");
-      if (res.ok) {
-        const data = await res.json();
-        if (typeof data.priceUsd === "number") {
-          setBctUsd(data.priceUsd);
-          return;
-        }
-      }
-
-      // Fallback to client-side calculation if API not available
-      const [t0, t1] = await Promise.all([
-        client.readContract({ address: PAIR_ADDRESS, abi: pairAbi, functionName: "token0" }),
-        client.readContract({ address: PAIR_ADDRESS, abi: pairAbi, functionName: "token1" }),
-      ]);
-      const { reserve0, reserve1 } = await client.readContract({ address: PAIR_ADDRESS, abi: pairAbi, functionName: "getReserves" });
-      const isTokenAFirst = t0.toLowerCase() === TOKEN_BCT.toLowerCase();
-      const reserveBct = BigInt(isTokenAFirst ? reserve0 : reserve1);
-      const reserveUsdc = BigInt(isTokenAFirst ? reserve1 : reserve0);
-      const reserveUsdc18 = reserveUsdc * 10n ** 12n;
-      const usdcPerBct1e18 = (reserveUsdc18 * 10n ** 18n) / reserveBct;
-      const [, answer] = await client.readContract({ address: CHAINLINK_USDC_USD, abi: feedAbi, functionName: "latestRoundData" });
-      const bctUsd1e18 = (usdcPerBct1e18 * BigInt(answer)) / 10n ** 8n;
-      setBctUsd(Number(bctUsd1e18) / 1e18);
-    } catch (e) {
-      setError(e?.message || "Failed to fetch price");
-    } finally {
+    
+    // Simulate API call
+    setTimeout(() => {
+      setBctUsd(1.2345);
       setLoading(false);
-    }
-  }
+    }, 1500);
+  };
 
-  useEffect(() => {
-    fetchPrice();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client]);
-
-  // Mock data for other stats
+  // Mock data for platform stats
   const platformStats = {
     totalVerifications: 15420,
     totalTokensStaked: 2500000,
@@ -101,68 +28,145 @@ export default function StatsPage() {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
+    <div style={{ 
+      minHeight: '100vh', 
+      padding: '3rem 1rem',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      color: 'white',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <Link 
             href="/" 
-            className="inline-block mb-4 text-primary-400 hover:text-primary-300 transition"
+            style={{
+              display: 'inline-block',
+              marginBottom: '1rem',
+              color: '#a0a0a0',
+              textDecoration: 'none'
+            }}
           >
             ← Back to Home
           </Link>
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-br from-blue-500 to-blue-700 bg-clip-text text-transparent mb-4">
+          <h1 style={{ 
+            fontSize: '3rem', 
+            fontWeight: 'bold', 
+            marginBottom: '1rem',
+            background: 'linear-gradient(45deg, #2196F3, #1976D2)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
             Platform Stats
           </h1>
-          <p className="text-primary-200/90 text-lg max-w-2xl mx-auto">
+          <p style={{ fontSize: '1.2rem', opacity: 0.9, maxWidth: '600px', margin: '0 auto' }}>
             Real-time statistics and carbon credit pricing data
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', 
+          gap: '2rem',
+          marginBottom: '2rem'
+        }}>
           {/* BCT Price Section */}
-          <div className="bg-blackish-400/50 backdrop-blur-sm rounded-xl p-6 border border-blue-800/30">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">BCT Price</h2>
+          <div style={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            padding: '2rem',
+            border: '1px solid rgba(33, 150, 243, 0.3)'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '1.5rem'
+            }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>BCT Price</h2>
               <button
-                onClick={fetchPrice}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors disabled:opacity-50"
+                onClick={handleRefreshPrice}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  backgroundColor: '#2196F3',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  opacity: loading ? 0.7 : 1
+                }}
                 disabled={loading}
               >
                 {loading ? "Loading..." : "Refresh"}
               </button>
             </div>
             
-            <div className="space-y-4">
+            <div>
               {error ? (
-                <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
-                  <p className="text-red-300">{error}</p>
+                <div style={{
+                  padding: '1rem',
+                  backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                  border: '1px solid rgba(244, 67, 54, 0.5)',
+                  borderRadius: '8px'
+                }}>
+                  <p style={{ color: '#f44336', margin: 0 }}>{error}</p>
                 </div>
               ) : bctUsd !== null ? (
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-400 mb-2">
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ 
+                    fontSize: '2.5rem', 
+                    fontWeight: 'bold', 
+                    color: '#2196F3',
+                    marginBottom: '0.5rem'
+                  }}>
                     ${bctUsd.toFixed(4)}
                   </div>
-                  <p className="text-primary-300">BCT/USD</p>
-                  <div className="flex items-center justify-center gap-2 mt-2">
-                    <span className="text-green-400">↗ +2.4%</span>
-                    <span className="text-sm text-primary-400">24h</span>
+                  <p style={{ color: '#a0a0a0', marginBottom: '1rem' }}>BCT/USD</p>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    gap: '0.5rem' 
+                  }}>
+                    <span style={{ color: '#4CAF50' }}>↗ +2.4%</span>
+                    <span style={{ fontSize: '0.9rem', color: '#a0a0a0' }}>24h</span>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-2">📊</div>
-                  <p className="text-primary-400">Price data will appear here</p>
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
+                  <p style={{ color: '#a0a0a0' }}>Price data will appear here</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Connect Wallet */}
-          <div className="bg-blackish-400/50 backdrop-blur-sm rounded-xl p-6 border border-primary-800/30">
-            <h2 className="text-2xl font-bold text-white mb-6">Wallet Connection</h2>
-            <div className="text-center">
-              <ConnectButton chainStatus="full" showBalance={false} />
-              <p className="text-primary-300 mt-4 text-sm">
+          <div style={{
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            padding: '2rem',
+            border: '1px solid rgba(255,255,255,0.2)'
+          }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
+              Wallet Connection
+            </h2>
+            <div style={{ textAlign: 'center' }}>
+              <button style={{
+                padding: '0.75rem 2rem',
+                backgroundColor: '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                marginBottom: '1rem'
+              }}>
+                Connect Wallet
+              </button>
+              <p style={{ color: '#a0a0a0', fontSize: '0.9rem', margin: 0 }}>
                 Connect your wallet to view personal stats
               </p>
             </div>
@@ -170,48 +174,126 @@ export default function StatsPage() {
         </div>
 
         {/* Platform Statistics */}
-        <div className="bg-blackish-400/50 backdrop-blur-sm rounded-xl p-6 border border-primary-800/30">
-          <h2 className="text-2xl font-bold text-white mb-6">Platform Statistics</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <div className="text-center p-4 bg-blackish-300/50 rounded-lg">
-              <div className="text-3xl font-bold text-blue-400 mb-2">
+        <div style={{
+          backgroundColor: 'rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          padding: '2rem',
+          border: '1px solid rgba(255,255,255,0.2)',
+          marginBottom: '2rem'
+        }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
+            Platform Statistics
+          </h2>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+            gap: '1.5rem' 
+          }}>
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '1.5rem',
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{ 
+                fontSize: '2rem', 
+                fontWeight: 'bold', 
+                color: '#2196F3',
+                marginBottom: '0.5rem'
+              }}>
                 {platformStats.totalVerifications.toLocaleString()}
               </div>
-              <p className="text-primary-300">Total Verifications</p>
+              <p style={{ color: '#a0a0a0', margin: 0 }}>Total Verifications</p>
             </div>
-            <div className="text-center p-4 bg-blackish-300/50 rounded-lg">
-              <div className="text-3xl font-bold text-green-400 mb-2">
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '1.5rem',
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{ 
+                fontSize: '2rem', 
+                fontWeight: 'bold', 
+                color: '#4CAF50',
+                marginBottom: '0.5rem'
+              }}>
                 {platformStats.totalTokensStaked.toLocaleString()}
               </div>
-              <p className="text-primary-300">Tokens Staked</p>
+              <p style={{ color: '#a0a0a0', margin: 0 }}>Tokens Staked</p>
             </div>
-            <div className="text-center p-4 bg-blackish-300/50 rounded-lg">
-              <div className="text-3xl font-bold text-emerald-400 mb-2">
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '1.5rem',
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{ 
+                fontSize: '2rem', 
+                fontWeight: 'bold', 
+                color: '#4CAF50',
+                marginBottom: '0.5rem'
+              }}>
                 {platformStats.totalCarbonOffset.toLocaleString()}
               </div>
-              <p className="text-primary-300">Tons CO₂ Offset</p>
+              <p style={{ color: '#a0a0a0', margin: 0 }}>Tons CO₂ Offset</p>
             </div>
-            <div className="text-center p-4 bg-blackish-300/50 rounded-lg">
-              <div className="text-3xl font-bold text-purple-400 mb-2">
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '1.5rem',
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{ 
+                fontSize: '2rem', 
+                fontWeight: 'bold', 
+                color: '#9C27B0',
+                marginBottom: '0.5rem'
+              }}>
                 {platformStats.activeUsers.toLocaleString()}
               </div>
-              <p className="text-primary-300">Active Users</p>
+              <p style={{ color: '#a0a0a0', margin: 0 }}>Active Users</p>
             </div>
-            <div className="text-center p-4 bg-blackish-300/50 rounded-lg">
-              <div className="text-3xl font-bold text-orange-400 mb-2">
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '1.5rem',
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{ 
+                fontSize: '2rem', 
+                fontWeight: 'bold', 
+                color: '#FF9800',
+                marginBottom: '0.5rem'
+              }}>
                 {platformStats.projectsSupported}
               </div>
-              <p className="text-primary-300">Projects Supported</p>
+              <p style={{ color: '#a0a0a0', margin: 0 }}>Projects Supported</p>
             </div>
           </div>
         </div>
 
         {/* Recent Activity */}
-        <div className="mt-8 bg-blackish-400/50 backdrop-blur-sm rounded-xl p-6 border border-primary-800/30">
-          <h2 className="text-2xl font-bold text-white mb-6">Recent Activity</h2>
-            
+        <div style={{
+          backgroundColor: 'rgba(0,0,0,0.3)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          padding: '2rem',
+          border: '1px solid rgba(255,255,255,0.2)'
+        }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
+            Recent Activity
+          </h2>
+          <div style={{ 
+            padding: '2rem',
+            textAlign: 'center',
+            color: '#a0a0a0'
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📈</div>
+            <p>Activity feed will appear here</p>
           </div>
         </div>
       </div>
+    </div>
   );
 }
