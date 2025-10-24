@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Use default mode for Azure Web Apps
+  output: "standalone",
+  experimental: {
+    outputFileTracingRoot: undefined,
+  },
 };
 
 export default nextConfig;
