@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - testing
   workflow_dispatch:
 
 jobs:
@@ -101,3 +102,4 @@ jobs:
           echo "Check Azure logs: https://impact-czexgybtg4dea0bp.scm.centralus-01.azurewebsites.net"
           echo "Check application logs: https://impact-czexgybtg4dea0bp.scm.centralus-01.azurewebsites.net/api/logs/docker"
           exit 1
+
