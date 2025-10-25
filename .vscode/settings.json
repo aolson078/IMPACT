@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/24a2e6f6-54f7-43aa-8559-d14411b5daac/resourceGroups/Impact/providers/Microsoft.Web/sites/Impact",
+  "appService.deploySubpath": "."
+}
